@@ -1,0 +1,15 @@
+{
+    "name": "Hackbar for chrome",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background":{
+        "service_worker": "background.js"
+    },
+    "action":{
+        "default_title": "Hackbar v1.0",
+        "default_popup": "popup.html"
+    },
+    "permissions":[
+        "tabs"
+    ]
+}
