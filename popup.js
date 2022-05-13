@@ -1,21 +1,19 @@
-
-
-
-
-
-
+/* Get the current tab */
 async function getCurrentTab(){
     let queryOptions = {active: true, currentWindow: true}
     let tab = await chrome.tabs.query(queryOptions);
     return tab;
 }
 
+/* variables for different buttons */
 
 let load_url = document.querySelector('.load_url');
 let split_url = document.querySelector('.split_url');
 let send_url = document.querySelector('.send_url');
 let encode_url = document.querySelector('.encode_url');
 var url = '';
+
+/* check if the data is present in chrome.storage */
 
 async function alreadypresent(){
     let data = await chrome.storage.sync.get('changed_url')
@@ -25,7 +23,11 @@ async function alreadypresent(){
     input_here.textContent = url;   
 }
 
+/* If the data is already present in the storage (chrome.storage) then load from there */
+
 alreadypresent()
+
+/* Onchange update the url of the textarea */
 
 input_here.addEventListener('change',()=>{
     url = input_here.value;
@@ -34,6 +36,7 @@ input_here.addEventListener('change',()=>{
     })
 })
 
+/* When clicking on load url*/
 
 load_url.addEventListener('click',async (event)=>{
     let tabs = await getCurrentTab();
@@ -43,6 +46,8 @@ load_url.addEventListener('click',async (event)=>{
     })
     input_here.textContent = url;
 })
+
+/* When clickin on split url */
 
 split_url.addEventListener('click',(event)=>{
     const load_url = new URL(url);
@@ -71,6 +76,8 @@ split_url.addEventListener('click',(event)=>{
 
 })
 
+/* When clicking on split url*/
+
 send_url.addEventListener('click',async (event)=>{
     let tabs = await getCurrentTab();
     let tabId = tabs[0].id;
@@ -78,7 +85,7 @@ send_url.addEventListener('click',async (event)=>{
     chrome.tabs.update(tabId, {url:new_url})
 })
 
-
+/* when clicking on encode button */
 
 encode_url.addEventListener('click',(event)=>{
     let selection_text = window.getSelection().toString();
