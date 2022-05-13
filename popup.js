@@ -1,4 +1,9 @@
 
+window.addEventListener('load',async ()=>{
+    let val = await chrome.storage.sync.get('changed_url')
+    input_here.textContent = val.changed_url
+})
+
 async function getCurrentTab(){
     let queryOptions = {active: true, currentWindow: true}
     let tab = await chrome.tabs.query(queryOptions);
@@ -9,7 +14,15 @@ async function getCurrentTab(){
 let load_url = document.querySelector('.load_url');
 let split_url = document.querySelector('.split_url');
 let send_url = document.querySelector('.send_url');
+let encode_url = document.querySelector('.encode_url');
 var url = '';
+
+input_here.addEventListener('change',()=>{
+    url = input_here.value;
+    chrome.storage.sync.set({changed_url:url},()=>{
+        console.log('value stored')
+    })
+})
 
 load_url.addEventListener('click',async (event)=>{
     let tabs = await getCurrentTab();
@@ -51,3 +64,19 @@ send_url.addEventListener('click',async (event)=>{
     chrome.tabs.update(tabId, {url:new_url})
 })
 
+
+
+encode_url.addEventListener('click',(event)=>{
+    let selection_text = window.getSelection().toString();
+    let encoding = document.querySelector('#encodings').value;
+    let start = input_here.selectionStart;
+    let stop = input_here.selectionEnd;
+    let add_string = url.substring(0, start);
+    switch(encoding){
+        case 'base64':
+            let replace_string = url.substring(start).replace(selection_text, btoa(selection_text));
+            input_here.textContent = add_string+replace_string
+            break;
+    }
+
+})
