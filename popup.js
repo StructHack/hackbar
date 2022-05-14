@@ -11,6 +11,7 @@ let load_url = document.querySelector('.load_url');
 let split_url = document.querySelector('.split_url');
 let send_url = document.querySelector('.send_url');
 let encode_url = document.querySelector('.encode_url');
+let decode_url = document.querySelector('.decode_url');
 var url = '';
 
 /* check if the data is present in chrome.storage */
@@ -148,5 +149,51 @@ encode_url.addEventListener('click',(event)=>{
     }
 }
 
+})
+
+/* When clicking on decoding button */
+
+decode_url.addEventListener('click',()=>{
+    let selection_text = window.getSelection().toString();
+    console.log(selection_text)
+    let encoding = document.querySelector('#decodings').value;
+    if(selection_text){
+    let start = input_here.selectionStart;
+    let stop = input_here.selectionEnd;
+    let add_string = url.substring(0, start);
+    let replace_string = ''
+    let full_url = ''
+    switch(encoding){
+        case 'base64':
+            replace_string = url.substring(start).replace(selection_text, atob(selection_text));
+            full_url = add_string+replace_string
+            input_here.value = full_url
+            url = full_url
+            chrome.storage.sync.set({changed_url:full_url},()=>{
+                console.log('value stored')
+            })
+            break;
+        case 'hex':
+            replace_string = url.substring(start).replace(selection_text, tohex(selection_text));
+            full_url = add_string+replace_string
+            input_here.value = full_url
+            url = full_url
+            chrome.storage.sync.set({changed_url:full_url},()=>{
+                console.log('value stored')
+            })
+            break;
+        case 'url':
+            replace_string = url.substring(start).replace(selection_text, decodeURIComponent(selection_text));
+            full_url = add_string+replace_string
+            input_here.value = full_url
+            url = full_url
+            chrome.storage.sync.set({changed_url:full_url},()=>{
+                console.log('value stored')
+            })
+            break;
+
+
+    }
+}
 })
 
