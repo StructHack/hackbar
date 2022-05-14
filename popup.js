@@ -23,6 +23,7 @@ async function alreadypresent(){
     input_here.textContent = url;   
 }
 
+
 /* If the data is already present in the storage (chrome.storage) then load from there */
 
 alreadypresent()
@@ -62,6 +63,11 @@ split_url.addEventListener('click',(event)=>{
    const query_string = search_params.split('?')[1]
    let queries = query_string.split('&')
    var edited_url = ''
+
+   if(queries.length === 1){
+       edited_url = '\n'+queries[0]
+   }
+
    if(queries.length > 1){
         for(i=0;i<queries.length;i++){
             if(i==0){
@@ -72,6 +78,7 @@ split_url.addEventListener('click',(event)=>{
         }
             
    }
+   url = protocol+'//'+domain_name+path+'?'+edited_url+hash
    input_here.textContent = protocol+'//'+domain_name+path+'?'+edited_url+hash
 
 })
@@ -85,6 +92,17 @@ send_url.addEventListener('click',async (event)=>{
     chrome.tabs.update(tabId, {url:new_url})
 })
 
+/* conversion to hex */
+
+function tohex(str){
+    let arr = []
+    for(i=0; i<str.length;i++){
+        let hex = Number(str.charCodeAt(i)).toString(16)
+        arr.push(hex)
+    }
+    return '0x'+arr.join('')
+}
+
 /* when clicking on encode button */
 
 encode_url.addEventListener('click',(event)=>{
@@ -95,17 +113,30 @@ encode_url.addEventListener('click',(event)=>{
     let start = input_here.selectionStart;
     let stop = input_here.selectionEnd;
     let add_string = url.substring(0, start);
+    let replace_string = ''
+    let full_url = ''
     switch(encoding){
         case 'base64':
-            let replace_string = url.substring(start).replace(selection_text, btoa(selection_text));
-            let full_url = add_string+replace_string
+            replace_string = url.substring(start).replace(selection_text, btoa(selection_text));
+            full_url = add_string+replace_string
             input_here.value = full_url
             url = full_url
             chrome.storage.sync.set({changed_url:full_url},()=>{
                 console.log('value stored')
             })
             break;
+        case 'hex':
+            replace_string = url.substring(start).replace(selection_text, tohex(selection_text));
+            full_url = add_string+replace_string
+            input_here.value = full_url
+            url = full_url
+            chrome.storage.sync.set({changed_url:full_url},()=>{
+                console.log('value stored')
+            })
+            break;
+
     }
 }
 
 })
+
