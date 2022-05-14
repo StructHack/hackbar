@@ -134,6 +134,16 @@ encode_url.addEventListener('click',(event)=>{
                 console.log('value stored')
             })
             break;
+        case 'url':
+            replace_string = url.substring(start).replace(selection_text, encodeURIComponent(selection_text));
+            full_url = add_string+replace_string
+            input_here.value = full_url
+            url = full_url
+            chrome.storage.sync.set({changed_url:full_url},()=>{
+                console.log('value stored')
+            })
+            break;
+
 
     }
 }
