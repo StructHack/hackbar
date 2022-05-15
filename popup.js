@@ -104,6 +104,14 @@ function tohex(str){
     return '0x'+arr.join('')
 }
 
+function toascii(hex_str){
+    let text = hex_str.substring(2)
+    let arr = text.match(/.{2}/g)
+    let new_arr = arr.map(x=>{return String.fromCharCode(parseInt(x,16)) })
+    return new_arr.join('')
+
+}
+
 /* when clicking on encode button */
 
 encode_url.addEventListener('click',(event)=>{
@@ -174,7 +182,7 @@ decode_url.addEventListener('click',()=>{
             })
             break;
         case 'hex':
-            replace_string = url.substring(start).replace(selection_text, tohex(selection_text));
+            replace_string = url.substring(start).replace(selection_text, toascii(selection_text));
             full_url = add_string+replace_string
             input_here.value = full_url
             url = full_url
