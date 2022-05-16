@@ -36,6 +36,11 @@
             <option value="url">URL</option>
         </select>
         <button class="decode_url">Decode</button>
+        <select name="xss" id="xss_payloads">
+            <option value="XSS payloads" selected>XSS</option>
+            <option value="<script>alert()</script>">&lt;script&gt;alert()&lt;/script&gt;</option>
+            <option value="<scr<script>ipt>alert('XSS')</scr<script>ipt>">&lt;scr&lt;script&gt;ipt&gt;alert('XSS')&lt;/scr&lt;script&gt;ipt&gt;</option>
+        </select>
     </footer>
     <script src="popup.js"></script>
 </body>
