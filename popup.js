@@ -12,6 +12,7 @@ let split_url = document.querySelector('.split_url');
 let send_url = document.querySelector('.send_url');
 let encode_url = document.querySelector('.encode_url');
 let decode_url = document.querySelector('.decode_url');
+let insert_payload = document.querySelector('.insert_payload');
 var url = '';
 
 /* check if the data is present in chrome.storage */
@@ -205,3 +206,16 @@ decode_url.addEventListener('click',()=>{
 }
 })
 
+
+insert_payload.addEventListener('click',()=>{
+    const payload = document.querySelector('#xss_payloads').value;
+    let cursor_postion = input_here.selectionStart;
+    let start_payload = url.substring(0, cursor_postion)
+    let end_payload = url.substring(cursor_postion)
+    full_url = `${start_payload}${payload}${end_payload}`
+    input_here.value = full_url
+
+    chrome.storage.sync.set({changed_url:full_url},()=>{
+        console.log('value stored')
+    })
+})
